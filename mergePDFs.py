@@ -2,14 +2,14 @@ import os
 import PyPDF2
 import sys
 
-print("Please run the script as:\n'python mergePDFs.py .\path\\to\\folder(say .\DCA\Febrarury) pageNumberToStartFrom(say 2)'")
+print("Please run the script as:\n'python mergePDFs.py .\path\\to\\folder(say ..\DCA\January\) pageNumberToStartFrom(say 2)'")
 
 if len(sys.argv) < 3:
     print("Please provide Folder Path.")
     sys.exit()
 
 input_folder =  sys.argv[1] #'./DCA/Febraury'  # input folder containing PDF files
-output_pdf = 'merged.pdf'  # output PDF file name
+output_pdf = input_folder.split()[-1]+'_merged.pdf'  # output PDF file name
 start_page = int(sys.argv[2])  # starting page number
 end_page = 5  # ending page number
 
@@ -35,6 +35,9 @@ for file in sorted_files:
     # add the pages of the PDF file to the output PDF file
     for page_num in range(start_page-1, end_page):
         page = input_file.getPage(page_num)
+        # Compress the page content
+        page.compressContentStreams()
+        
         page.mergePage(page)
         output.addPage(page)
 
